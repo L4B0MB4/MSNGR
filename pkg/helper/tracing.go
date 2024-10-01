@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"context"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
@@ -12,8 +14,12 @@ type TracingHook struct{}
 
 func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	ctx := e.GetCtx()
+	e.Str("span-id", GetTraceId(ctx))
+}
+
+func GetTraceId(ctx context.Context) string {
 	spanId, _ := ctx.Value("spanId").(string)
-	e.Str("span-id", spanId)
+	return spanId
 }
 
 func TracingMiddleWare(c *gin.Context) {

@@ -21,7 +21,7 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 		responseErrors := make([]api.Error, len(errs))
 		for i := 0; i < len(errs); i++ {
 			responseErrors[i] = api.Error{
-				Id:     "",
+				Id:     GetTraceId(ctx),
 				Detail: fmt.Sprintf("Validation failed for field '%s'", errs[i].Field()),
 			}
 		}
@@ -38,7 +38,7 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 
 		resp := api.Response{
 			Errors: []api.Error{{
-				Id:     "",
+				Id:     GetTraceId(ctx),
 				Detail: fmt.Sprintf("Validation failed for field '%s'", unmarshalErr.Field),
 			},
 			},
@@ -49,7 +49,7 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 
 	resp := api.Response{
 		Errors: []api.Error{{
-			Id:     "",
+			Id:     GetTraceId(ctx),
 			Detail: "Unkown error occured",
 		},
 		},
@@ -62,7 +62,7 @@ func AbortWithCustomError(ctx *gin.Context, err error) {
 
 	resp := api.Response{
 		Errors: []api.Error{{
-			Id:     "",
+			Id:     GetTraceId(ctx),
 			Detail: "Unkown error occured",
 		},
 		},
@@ -75,7 +75,7 @@ func AbortWithUnkownError(ctx *gin.Context, err error) {
 	log.Error().Ctx(ctx).Err(err).Msg("Unkown error occured. Aborting request")
 	resp := api.Response{
 		Errors: []api.Error{{
-			Id:     "",
+			Id:     GetTraceId(ctx),
 			Detail: "Unkown error occured",
 		},
 		},
