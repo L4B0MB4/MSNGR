@@ -14,7 +14,11 @@ type TracingHook struct{}
 
 func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	ctx := e.GetCtx()
-	e.Str("span-id", GetTraceId(ctx))
+	spanId := GetTraceId(ctx)
+	if spanId != "" {
+		e.Str("span-id", spanId)
+
+	}
 }
 
 func GetTraceId(ctx context.Context) string {

@@ -25,5 +25,6 @@ func main() {
 	fp := forwarding.NewForwardingProvider(r)
 	mCtrl := controller.NewMessageController(fp)
 	server := api.NewHttpHandler(config, mCtrl)
+	log.Logger.Debug().Msg("Starting the server")
 	server.Start()
 }
