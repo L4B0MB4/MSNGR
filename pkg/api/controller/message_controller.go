@@ -10,10 +10,10 @@ import (
 )
 
 type MessageController struct {
-	fwdProvider *forwarding.ForwardingProvider
+	fwdProvider forwarding.ForwardingProvider
 }
 
-func NewMessageController(fwdProvider *forwarding.ForwardingProvider) *MessageController {
+func NewMessageController(fwdProvider forwarding.ForwardingProvider) *MessageController {
 
 	return &MessageController{
 		fwdProvider: fwdProvider,
@@ -31,16 +31,21 @@ func (m *MessageController) ForwardMessage(ctx *gin.Context) {
 	log.Debug().Ctx(ctx).Msg("Received message - forwarding...")
 	err = m.fwdProvider.ForwardMessage(ctx, &messageModel)
 	if err != nil {
-		switch e := err.(type) {
-		case *custom_error.NoProvidersError:
-		case *custom_error.ForwardFailedError:
-			helper.AbortWithCustomError(ctx, e)
-			return
-		default:
-			helper.AbortWithUnkownError(ctx, e)
+
+		e1 := err.(*custom_error.NoProvidersError)
+		if e1 != nil {
+			helper.AbortWithOk(ctx, e1)
 			return
 		}
-	} else {
 
+		e2 := err.(*custom_error.ForwardFailedError)
+		if e2 != nil {
+			helper.AbortWithCustomError(ctx, e2)
+			return
+		}
+		helper.AbortWithUnkownError(ctx, err)
+		return
+	} else {
+		ctx.Status(204)
 	}
 }

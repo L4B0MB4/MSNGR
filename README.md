@@ -18,7 +18,8 @@ The response could've looked something like this in an async case
 
 Additionally I built the system enhanceable in the areas where i saw the most potential: "Rules for forwarding the message" and "channels to send it to".
 
-
+For testing: The integration tests will fail if the .env file is not present or the env variables are not set. I focused on integration tests since the
+exercise did not suggest unit tests (but i added also one unit test as an example)
 
 
 ## Documentation

@@ -43,7 +43,7 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 			},
 			},
 		}
-		ctx.AbortWithStatusJSON(404, resp)
+		ctx.AbortWithStatusJSON(400, resp)
 		return
 	}
 
@@ -58,12 +58,23 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 
 }
 
+func AbortWithOk(ctx *gin.Context, err error) {
+
+	resp := api.Response{
+		Data: api.Detail{
+			Description: err.Error(),
+		},
+		Errors: []api.Error{},
+	}
+	ctx.AbortWithStatusJSON(200, resp)
+}
+
 func AbortWithCustomError(ctx *gin.Context, err error) {
 
 	resp := api.Response{
 		Errors: []api.Error{{
 			Id:     GetTraceId(ctx),
-			Detail: "Unkown error occured",
+			Detail: err.Error(),
 		},
 		},
 	}
