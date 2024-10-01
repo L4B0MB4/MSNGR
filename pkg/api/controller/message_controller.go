@@ -24,11 +24,12 @@ func (m *MessageController) ForwardMessage(ctx *gin.Context) {
 	messageModel := models.MessageModel{}
 	err := ctx.ShouldBindBodyWithJSON(&messageModel)
 	if err != nil {
-		log.Info().Err(err).Msg("Error during model binding")
+		log.Info().Ctx(ctx).Err(err).Msg("Error during model binding")
 		helper.AbortWithBadRequest(ctx, err)
 		return
 	}
-	err = m.fwdProvider.ForwardMessage(&messageModel)
+	log.Debug().Ctx(ctx).Msg("Received message - forwarding...")
+	err = m.fwdProvider.ForwardMessage(ctx, &messageModel)
 	if err != nil {
 		switch e := err.(type) {
 		case *custom_error.NoProvidersError:

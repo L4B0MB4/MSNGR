@@ -72,7 +72,7 @@ func AbortWithCustomError(ctx *gin.Context, err error) {
 
 func AbortWithUnkownError(ctx *gin.Context, err error) {
 
-	log.Err(err).Msg("Unkown error occured. Aborting request")
+	log.Error().Ctx(ctx).Err(err).Msg("Unkown error occured. Aborting request")
 	resp := api.Response{
 		Errors: []api.Error{{
 			Id:     "",

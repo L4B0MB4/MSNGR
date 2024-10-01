@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/L4B0MB4/MSNGR/pkg/api/controller"
+	"github.com/L4B0MB4/MSNGR/pkg/helper"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
@@ -34,6 +35,7 @@ func NewHttpHandler(c *controller.MessageController) *HttpApi {
 }
 
 func (h *HttpApi) registerRoutes() {
+	h.router.Use(helper.TracingMiddleWare)
 	api := h.router.Group("/api/:tenantId/")
 	{
 

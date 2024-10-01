@@ -2,6 +2,7 @@ package discord
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -24,7 +25,7 @@ func (d *DiscordCommunicator) GetName() string {
 }
 
 // SendMessage implements CommunicationProvider.
-func (d *DiscordCommunicator) SendMessage(messageModel *models.MessageModel) error {
+func (d *DiscordCommunicator) SendMessage(ctx context.Context, messageModel *models.MessageModel) error {
 	msgEmbed := messageEmbed{
 		Title:       messageModel.Name,
 		Description: messageModel.Description,
@@ -35,19 +36,27 @@ func (d *DiscordCommunicator) SendMessage(messageModel *models.MessageModel) err
 	}
 	bodyBytes, err := json.Marshal(msgTemplate)
 	if err != nil {
-		log.Info().Err(err).Msg("Could not marshal events")
+		log.Info().Ctx(ctx).Err(err).Msg("Could not marshal events")
 		return err
 	}
 	buf := bytes.NewBuffer(bodyBytes)
 
 	httpClient := http.Client{}
 	req, err := http.NewRequest("POST", "https://discord.com/api/v10/channels/.../messages", buf)
+	if err != nil {
+		log.Warn().Ctx(ctx).Err(err).Msg("Error during request creation")
+		return err
+	}
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := httpClient.Do(req)
+	if err != nil {
+		log.Warn().Ctx(ctx).Err(err).Msg("Error during response retrival")
+		return err
+	}
 	//for this specific request we know it has to be 200. Otherwise should search in a range of valid status codes
 	if resp.StatusCode != 200 {
-		log.Info().Err(err).Msg("Got non 2XX header")
-		return fmt.Errorf("UNSUCCESSFUL REQUEST")
+		log.Warn().Ctx(ctx).Err(err).Msg("Got a non-200 header")
+		return fmt.Errorf("unsuccessful request")
 	}
 	return nil
 
