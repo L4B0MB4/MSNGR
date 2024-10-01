@@ -1,5 +1,6 @@
 package discord
 
+// discord only message template
 type messageTemplate struct {
 	Content string         `json:"content"`
 	Embeds  []messageEmbed `json:"embeds"`

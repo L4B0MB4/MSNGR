@@ -20,6 +20,12 @@ func NewMessageController(fwdProvider forwarding.ForwardingProvider) *MessageCon
 	}
 }
 
+// Validates incoming model and if that was successful hands over to ForwardingProvider
+// and then only handles potential errors from this provider
+// No providers found to forward to -> 200
+// Providers forwarded to -> 204
+// Validation error -> 400
+// Any other error -> 500 + proper log in the console
 func (m *MessageController) ForwardMessage(ctx *gin.Context) {
 	messageModel := models.MessageModel{}
 	err := ctx.ShouldBindBodyWithJSON(&messageModel)

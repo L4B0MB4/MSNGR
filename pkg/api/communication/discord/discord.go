@@ -25,12 +25,13 @@ func NewDiscordCommunicator(config *configuration.ConfigProvider) communication.
 	}
 }
 
-// GetName implements CommunicationProvider.
+// Returns the name of the provider
 func (d *DiscordCommunicator) GetName() string {
 	return models.COMMUNICATIONPROVIDER_DISCORD
 }
 
-// SendMessage implements CommunicationProvider.
+// Sends messages to discord in a template and is part of the interface CommunicationProvider
+// Returns unsanitized errors multiple times which need to be handled by the caller
 func (d *DiscordCommunicator) SendMessage(ctx context.Context, messageModel *models.MessageModel) error {
 	msgEmbed := messageEmbed{
 		Title:       messageModel.Name,

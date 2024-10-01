@@ -12,6 +12,7 @@ import (
 
 type TracingHook struct{}
 
+// used for zerolog as a hook whenever "Ctx(ctx)" is used in logging
 func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	ctx := e.GetCtx()
 	spanId := GetTraceId(ctx)
@@ -26,6 +27,7 @@ func GetTraceId(ctx context.Context) string {
 	return spanId
 }
 
+// Sets a uuid for the context of every gin-request
 func TracingMiddleWare(c *gin.Context) {
 	c.Set("spanId", uuid.New().String())
 	c.Next()

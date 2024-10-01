@@ -21,6 +21,7 @@ func NewForwardingRule(cps []communication.CommunicationProvider) ForwardingRule
 	}
 }
 
+// Default forwarding rule from task "Only forward warning messages" and an additional check for the "correct" provider
 func (r *DefaultForwardingRule) GetProvidersToForwardTo(messageType string) []communication.CommunicationProvider {
 	if strings.ToLower(messageType) == models.MESSAGE_TYPE_WARNING {
 		cpsToUse := []communication.CommunicationProvider{}

@@ -23,7 +23,7 @@ func main() {
 	r := forwarding.NewForwardingRule(rs)
 	fp := forwarding.NewForwardingProvider(r)
 	mCtrl := controller.NewMessageController(fp)
-	server := api.NewHttpHandler(config, mCtrl)
+	server := api.NewHttpApi(config, mCtrl)
 	log.Logger.Debug().Msg("Starting the server")
 	server.Start()
 }

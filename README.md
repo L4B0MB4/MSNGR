@@ -21,5 +21,10 @@ Additionally I built the system enhanceable in the areas where i saw the most po
 For testing: The integration tests will fail if the .env file is not present or the env variables are not set. I focused on integration tests since the
 exercise did not suggest unit tests (but i added also one unit test as an example)
 
+I also skipped graceful shutdown of the api server for time's-sake
+
 
 ## Documentation
+
+
+Gin -> instable packages

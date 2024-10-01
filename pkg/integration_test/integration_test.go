@@ -22,7 +22,7 @@ func Setup() *api.HttpApi {
 	r := forwarding.NewForwardingRule(rs)
 	fp := forwarding.NewForwardingProvider(r)
 	mCtrl := controller.NewMessageController(fp)
-	server := api.NewHttpHandler(config, mCtrl)
+	server := api.NewHttpApi(config, mCtrl)
 	return server
 }
 

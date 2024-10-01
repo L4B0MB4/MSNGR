@@ -11,6 +11,7 @@ type ConfigProvider struct {
 	config map[string]string
 }
 
+// reads configuration from both .env file and env variables.
 func NewConfigurationProvider() *ConfigProvider {
 
 	err := godotenv.Load()

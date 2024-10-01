@@ -18,6 +18,7 @@ func NewForwardingProvider(fwdRule ForwardingRule) *DefaultForwardingProvider {
 	}
 }
 
+// based on the fowarding rules injected this does commands the communicationProvider to send messages
 func (f *DefaultForwardingProvider) ForwardMessage(ctx context.Context, messageModel *models.MessageModel) error {
 
 	cps := f.fwdRule.GetProvidersToForwardTo(messageModel.Type)
@@ -25,6 +26,7 @@ func (f *DefaultForwardingProvider) ForwardMessage(ctx context.Context, messageM
 		return custom_error.NewNoProvidersError()
 	}
 	for _, cp := range cps {
+		//to increase speed this could probably go into a go function
 		err := cp.SendMessage(ctx, messageModel)
 		if err != nil {
 			log.Error().Ctx(ctx).Err(err).Msg("Error occured while forwarding message")

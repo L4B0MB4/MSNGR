@@ -11,6 +11,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// helper for serializing validation errors (and similar) properly
+// everything but validation and json-unmarshall errors are considered unkown
 func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 
 	errs := validator.ValidationErrors{}
@@ -58,6 +60,7 @@ func AbortWithBadRequest(ctx *gin.Context, ginBindingError error) {
 
 }
 
+// aborts all but the current handler and returns statuscode 200
 func AbortWithOk(ctx *gin.Context, err error) {
 
 	resp := api.Response{
@@ -69,6 +72,7 @@ func AbortWithOk(ctx *gin.Context, err error) {
 	ctx.AbortWithStatusJSON(200, resp)
 }
 
+// aborts all but the current handler and returns statuscode 500 with a specific error message from the custom error
 func AbortWithCustomError(ctx *gin.Context, err error) {
 
 	resp := api.Response{
@@ -81,6 +85,7 @@ func AbortWithCustomError(ctx *gin.Context, err error) {
 	ctx.AbortWithStatusJSON(500, resp)
 }
 
+// aborts all but the current handler and returns statuscode 500 with "unkown error"-message
 func AbortWithUnkownError(ctx *gin.Context, err error) {
 
 	log.Error().Ctx(ctx).Err(err).Msg("Unkown error occured. Aborting request")
