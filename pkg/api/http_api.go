@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/L4B0MB4/MSNGR/pkg/api/controller"
+	"github.com/L4B0MB4/MSNGR/pkg/configuration"
 	"github.com/L4B0MB4/MSNGR/pkg/helper"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -16,11 +17,11 @@ type HttpApi struct {
 	messageController *controller.MessageController
 }
 
-func NewHttpHandler(c *controller.MessageController) *HttpApi {
+func NewHttpHandler(config *configuration.ConfigProvider, c *controller.MessageController) *HttpApi {
 	//document that gin brings instable go packages with it
 	r := gin.Default()
 	srv := &http.Server{
-		Addr:    "0.0.0.0" + ":" + "6616",
+		Addr:    config.GetStringValue("HOST") + ":" + config.GetStringValue("PORT"),
 		Handler: r,
 	}
 	handler := &HttpApi{

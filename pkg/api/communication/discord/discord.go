@@ -8,15 +8,21 @@ import (
 	"net/http"
 
 	"github.com/L4B0MB4/MSNGR/pkg/api/communication"
+	"github.com/L4B0MB4/MSNGR/pkg/configuration"
 	"github.com/L4B0MB4/MSNGR/pkg/models"
 	"github.com/rs/zerolog/log"
 )
 
 type DiscordCommunicator struct {
+	auth    string
+	channel string
 }
 
-func NewDiscordCommunicator() communication.CommunicationProvider {
-	return &DiscordCommunicator{}
+func NewDiscordCommunicator(config *configuration.ConfigProvider) communication.CommunicationProvider {
+	return &DiscordCommunicator{
+		auth:    config.GetStringValue("DISCORD_BOT_TOKEN"),
+		channel: config.GetStringValue("DISCORD_CHANNEL_ID"),
+	}
 }
 
 // GetName implements CommunicationProvider.
@@ -42,11 +48,12 @@ func (d *DiscordCommunicator) SendMessage(ctx context.Context, messageModel *mod
 	buf := bytes.NewBuffer(bodyBytes)
 
 	httpClient := http.Client{}
-	req, err := http.NewRequest("POST", "https://discord.com/api/v10/channels/.../messages", buf)
+	req, err := http.NewRequest("POST", "https://discord.com/api/v10/channels/"+d.channel+"/messages", buf)
 	if err != nil {
 		log.Warn().Ctx(ctx).Err(err).Msg("Error during request creation")
 		return err
 	}
+	req.Header.Add("Authorization", "Bot "+d.auth)
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := httpClient.Do(req)
 	if err != nil {
