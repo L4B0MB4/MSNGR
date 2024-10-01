@@ -18,7 +18,6 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Logger.Debug().Msg("Starting with dependency resolution")
 	log.Logger = log.Logger.Hook(helper.TracingHook{})
-
 	config := configuration.NewConfigurationProvider()
 	rs := []communication.CommunicationProvider{discord.NewDiscordCommunicator(config)}
 	r := forwarding.NewForwardingRule(rs)
